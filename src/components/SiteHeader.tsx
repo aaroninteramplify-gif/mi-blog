@@ -21,18 +21,19 @@ export default function SiteHeader() {
           >
             Blog
           </Link>
-          <a
-            href="#sobre"
-            className="text-sm font-medium text-zinc-300 transition hover:text-white"
-          >
-            Sobre nosotros
-          </a>
-          <a
-            href="#contacto"
-            className="text-sm font-medium text-zinc-300 transition hover:text-white"
-          >
-            Contacto
-          </a>
+<Link
+  href="/sobre-nosotros"
+  className="text-sm font-medium text-zinc-300 transition hover:text-white"
+>
+  Sobre nosotros
+</Link>
+
+<Link
+  href="/contacto"
+  className="text-sm font-medium text-zinc-300 transition hover:text-white"
+>
+  Contacto
+</Link>
         </nav>
 
         <Link

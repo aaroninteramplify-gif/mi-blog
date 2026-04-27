@@ -1,26 +1,53 @@
-# Blog con Next.js + API Phantom
+# Blog de recetas – Next.js + API 0xPhantom
 
-Proyecto de frontend de un blog headless desarrollado con **Next.js 16**, conectado a la API de **0xPhantom**.
+Frontend de un blog headless construido con Next.js conectado a la API de 0xPhantom.
 
+---
 
-## Tecnologías que he utilizado
+## Tecnologías
 
-- Next.js 16 (App Router)
+- Next.js 16
 - React 19
-- TypeScript
 - Tailwind CSS v4
+- TypeScript
+- EditorJS Renderer
 - API REST (0xPhantom)
 
+---
 
-## Funcionalidades
+## Rutas principales
 
-- Listado de posts (`/blog`)
-- Página de detalle (`/blog/[slug]`)
-- Renderizado de contenido dinámico (EditorJS)
-- Paginación de artículos
-- Animaciones en tarjetas (hover)
-- Generación estática (SSG)
-- Revalidación automática cada 60s
+- `/blog` → listado de recetas
+- `/blog/[slug]` → detalle de receta
+- `/contacto` → página CMS desde API
+- `/sobre-nosotros` → página CMS desde API
+
+---
+
+## API
+
+Los datos se obtienen desde la API de 0xPhantom mediante `fetch` en Server Components.
+
+Funciones principales:
+
+- `getPosts()` → listado paginado
+- `getPost(slug)` → detalle
+- `getRelatedPosts(slug)` → relacionados
+- `getPage(slug)` → páginas CMS
+
+---
+
+## Funcionalidades implementadas
+
+ Listado de recetas dinámico  
+ Página de detalle con contenido renderizado (EditorJS)  
+ FAQ dinámicas desde la API  
+ Tags por receta  
+ Posts relacionados (API)  
+ Paginación  
+ Diseño UI tipo web real (inspirado en Recetillas)  
+ Animaciones con Framer Motion  
+
 
 
 ## Seguridad

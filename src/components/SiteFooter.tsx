@@ -35,12 +35,13 @@ export default function SiteFooter() {
             <Link href="/blog" className="block hover:text-white">
               Blog
             </Link>
-            <a href="#sobre" className="block hover:text-white">
-              Sobre nosotros
-            </a>
-            <a href="#contacto" className="block hover:text-white">
-              Contacto
-            </a>
+<Link href="/sobre-nosotros" className="block hover:text-white">
+  Sobre nosotros
+</Link>
+
+<Link href="/contacto" className="block hover:text-white">
+  Contacto
+</Link>
           </div>
         </div>
 

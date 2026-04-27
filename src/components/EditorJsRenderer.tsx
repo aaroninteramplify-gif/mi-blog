@@ -323,6 +323,111 @@ function EmbedBlock({ data }: { data: Record<string, unknown> }) {
   );
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null
+}
+
+function readValue(value: unknown): string {
+  if (typeof value === "string") return value
+
+  if (Array.isArray(value)) {
+    return value.map(readValue).filter(Boolean).join("")
+  }
+
+  if (isRecord(value)) {
+    const preferred =
+      value.text ??
+      value.content ??
+      value.html ??
+      value.answer ??
+      value.description ??
+      value.title ??
+      value.question
+
+    if (preferred) return readValue(preferred)
+
+    return Object.values(value).map(readValue).filter(Boolean).join("")
+  }
+
+  return ""
+}
+
+function findByKeys(item: Record<string, unknown>, keys: string[]) {
+  for (const key of Object.keys(item)) {
+    const normalizedKey = key.toLowerCase()
+
+    if (keys.some((wantedKey) => normalizedKey.includes(wantedKey))) {
+      const value = readValue(item[key])
+      if (value) return value
+    }
+  }
+
+  return ""
+}
+
+function flattenText(value: unknown): string[] {
+  if (typeof value === "string") return [value]
+
+  if (Array.isArray(value)) {
+    return value.flatMap(flattenText).filter(Boolean)
+  }
+
+  if (value && typeof value === "object") {
+    return Object.values(value as Record<string, unknown>)
+      .flatMap(flattenText)
+      .filter(Boolean)
+  }
+
+  return []
+}
+
+function FaqBlock({ data }: { data: Record<string, unknown> }) {
+  const title = String(data.title ?? "Preguntas frecuentes")
+  const items = Array.isArray(data.items)
+    ? (data.items as Record<string, unknown>[])
+    : []
+
+  return (
+    <motion.section variants={fadeUp} className="space-y-4">
+      {title && (
+        <h3 className="text-2xl font-bold text-zinc-900">
+          {title}
+        </h3>
+      )}
+
+      <div className="space-y-3">
+        {items.map((item, index) => {
+          const texts = flattenText(item)
+
+          const question = texts[0] ?? `Pregunta ${index + 1}`
+          const answer = texts.slice(1).join("<br />")
+
+          return (
+            <details
+              key={index}
+              className="group rounded-xl border border-zinc-200 bg-white px-5 py-4"
+            >
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-zinc-900">
+                <span dangerouslySetInnerHTML={{ __html: question }} />
+                <span className="text-blue-600 transition group-open:rotate-180">
+                  ˅
+                </span>
+              </summary>
+
+              {answer && (
+                <div
+                  className="mt-3 leading-relaxed text-zinc-700"
+                  dangerouslySetInnerHTML={{ __html: answer }}
+                />
+              )}
+            </details>
+          )
+        })}
+      </div>
+    </motion.section>
+  )
+}
+
 interface Props {
   content: string;
 }
@@ -418,8 +523,29 @@ export default function EditorJsRenderer({ content }: Props) {
                 <EmbedBlock data={block.data} />
               </motion.div>
             );
-          default:
-            return null;
+case "faq":
+case "faqs":
+case "FAQ":
+case "faqBlock":
+case "faq-block":
+case "accordion":
+case "questions":
+  return (
+    <motion.div key={i} initial="hidden" whileInView="show" viewport={vp}>
+      <FaqBlock data={block.data} />
+    </motion.div>
+  )
+
+default:
+  if (Array.isArray(block.data.items)) {
+    return (
+      <motion.div key={i} initial="hidden" whileInView="show" viewport={vp}>
+        <FaqBlock data={block.data} />
+      </motion.div>
+    )
+  }
+
+  return null
         }
       })}
     </div>
